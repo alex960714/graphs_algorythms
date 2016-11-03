@@ -1,11 +1,18 @@
 #include "my_graph.h"
 
-My_graph::My_graph(int len)
+My_graph::My_graph(int nodes)
 {
-	NodesNum = len;
+	NodesNum = nodes;
+	EdgesNum = 0;
+	adj_matr = new int*[nodes];
+	for (int i = 0; i < NodesNum; i++)
+		adj_matr[i] = new int[nodes];
+	for (int i = 0; i < NodesNum; i++)
+		for (int j = 0; j < NodesNum; j++)
+			adj_matr[i][j] = 0;
 }
 
-My_graph::My_graph(int** matr, int len, bool is_adj_matr)
+My_graph::My_graph(int** matr, int nodes, bool is_adj_matr, int edges)
 {
 
 }
