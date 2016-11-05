@@ -27,7 +27,7 @@ int main(int argc, char** argv)
 		printf("\n");
 	}
 
-	if (search(matr, size, st))
+	if (hamilton_cycle::search(matr, size, st))
 	{
 		printf("Hamilton cycle:\n");
 		while (!st.empty())
