@@ -137,7 +137,7 @@
     <ClCompile Include="hamilton_cycle_search.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="hamiton_cycle_search.h" />
+    <ClInclude Include="hamilton_cycle_search.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
