@@ -4,40 +4,56 @@ My_graph::My_graph(int nodes)
 {
 	NodesNum = nodes;
 	EdgesNum = 0;
+
 	adj_matr = new int*[nodes];
 	for (int i = 0; i < NodesNum; i++)
 		adj_matr[i] = new int[nodes];
+
 	for (int i = 0; i < NodesNum; i++)
 		for (int j = 0; j < NodesNum; j++)
 			adj_matr[i][j] = 0;
 }
 
-My_graph::My_graph(int** matr, int nodes, bool is_adj_matr, int edges)
+My_graph::My_graph(int** matr, int nodes)
 {
-
+	setAdjMatr(matr, nodes);
 }
 
 My_graph::~My_graph()
 {
-
+	for (int i = 0; i < NodesNum; i++)
+		delete[] adj_matr[i];
+	delete[] adj_matr;
 }
 
-void My_graph::getAdjMatr(int** matr, int& len)
+int** My_graph::getAdjMatr(int& len)
 {
-	
-}
+	int** matr = new int*[NodesNum];
+	for (int i = 0; i < NodesNum; i++)
+		matr[i] = new int[NodesNum];
 
-void My_graph::getIncMatr(int** matr, int& len)
-{
+	for (int i = 0; i < NodesNum; i++)
+		for (int j = 0; j < NodesNum; j++)
+			matr[i][j] = adj_matr[i][j];
 
+	len = NodesNum;
+	return matr;
 }
 
 void My_graph::setAdjMatr(int** matr, int len)
 {
+	adj_matr = new int*[len];
+	for (int i = 0; i < len; i++)
+		adj_matr[i] = new int[len];
 
-}
+	NodesNum = len;
+	EdgesNum = 0;
 
-void My_graph::setIncMatr(int** matr, int len)
-{
-
+	for (int i = 0; i < NodesNum; i++)
+		for (int j = 0; j < NodesNum; j++)
+		{
+			adj_matr[i][j] = matr[i][j];
+			EdgesNum++;
+		}
+	EdgesNum /= 2;
 }

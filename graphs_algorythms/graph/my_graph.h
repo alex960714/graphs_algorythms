@@ -6,23 +6,24 @@ class My_graph
 {
 private:
 	int** adj_matr;      //матрица смежности
-	int** inc_matr;      //матрица инцидентности
+	//int** inc_matr;      //матрица инцидентности
 	int NodesNum;
 	int EdgesNum;
 
 public:
 	My_graph() { NodesNum = 0; EdgesNum = 0; };
 	My_graph(int nodes);
-	My_graph(int** matr, int nodes, bool is_adj_matr = true, int edges = 0);
+	My_graph(int** matr, int nodes);
 
 	~My_graph();
 
 	int getNodesNum() { return NodesNum; };
-	void getAdjMatr(int** matr, int& len);
-	void getIncMatr(int** matr, int& len);
+	int getEdgesNum() { return EdgesNum; };
+	int** getAdjMatr(int& len);
+	//void getIncMatr(int** matr, int& len);
 	
 	void setAdjMatr(int** matr, int len);
-	void setIncMatr(int** matr, int len);
+	//void setIncMatr(int** matr, int len);
 
 	bool IsEmpty() { return !NodesNum; };
 };
