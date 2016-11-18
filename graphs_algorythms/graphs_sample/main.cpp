@@ -2,12 +2,14 @@
 #include "hamilton_cycle_search.h"
 #include <stack>
 #include <fstream>
+#include <Windows.h>
 using namespace std;
 
 int main(int argc, char** argv)
 {
 	int **matr;
 	int size;
+	double st_time, en_time;
 	stack<int> st;
 	ifstream is;
 
@@ -26,9 +28,12 @@ int main(int argc, char** argv)
 		}
 		printf("\n");
 	}
+	is.close();
 
+	st_time = GetTickCount();
 	if (hamilton_cycle::search(matr, size, st))
 	{
+		en_time = GetTickCount();
 		printf("Hamilton cycle:\n");
 		while (!st.empty())
 		{
@@ -37,9 +42,12 @@ int main(int argc, char** argv)
 		}
 		printf("\n");
 	}
-	else printf("No hamilton cycle\n");
-	
-	is.close();
+	else
+	{
+		en_time = GetTickCount();
+		printf("No hamilton cycle\n");
+	}
+	printf("Time: %f\n", (en_time - st_time) / 1000);
 
 	for (int i = 0; i < size; i++)
 		delete[] matr[i];
