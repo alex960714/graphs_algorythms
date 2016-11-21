@@ -8,16 +8,18 @@ using namespace std;
 
 int init_file(char* file_name);
 void init_rand(int size, int perc);
+void exper(int num, int size, int perc);
 
 int **matr;
+stack<int> st;
 
 int main(int argc, char** argv)
 {
 	setlocale(LC_CTYPE, "Russian");
 	int size, perc;
 	double st_time, en_time;
-	stack<int> st;
-	int op;
+	
+	int op, graph_num = 1;
 
 	do
 	{
@@ -33,37 +35,54 @@ int main(int argc, char** argv)
 			cin >> size;
 			cout << "Введите процент плотности графа:" << endl;
 			cin >> perc;
-			init_rand(size, perc);
+			cout << "Введите число экспериментов:" << endl;
+			cin >> graph_num;
+
+			if (graph_num == 1)
+			{
+				init_rand(size, perc);
+			}
+			else
+			{
+				exper(graph_num, size, perc);
+			}
+
 			break;
 		default:
 			cout << "Неправильный номер операции!" << endl;
 		}
 	} while (op != 1 && op != 2);
 
-	st_time = GetTickCount();
-	if (hamilton_cycle::search(matr, size, st))
+	if (graph_num == 1)
 	{
-		en_time = GetTickCount();
-		printf("Hamilton cycle:\n");
-		while (!st.empty())
+		st_time = GetTickCount();
+		if (hamilton_cycle::search(matr, size, st))
 		{
-			printf("%d ", st.top());
-			st.pop();
+			en_time = GetTickCount();
+			printf("Hamilton cycle:\n");
+			while (!st.empty())
+			{
+				printf("%d ", st.top());
+				st.pop();
+			}
+			printf("\n");
 		}
-		printf("\n");
-	}
-	else
-	{
-		en_time = GetTickCount();
-		printf("No hamilton cycle\n");
-	}
-	printf("Time: %f\n", (en_time - st_time) / 1000);
+		else
+		{
+			en_time = GetTickCount();
+			printf("No hamilton cycle\n");
+		}
+		printf("Time: %f\n", (en_time - st_time) / 1000);
 
-	for (int i = 0; i < size; i++)
-		delete[] matr[i];
-	delete[] matr;
+
+		for (int i = 0; i < size; i++)
+			delete[] matr[i];
+		delete[] matr;
+	}
 	return 0;
 }
+
+//--------------------------------------------------------//
 
 int init_file(char* file_name)
 {
@@ -88,6 +107,8 @@ int init_file(char* file_name)
 	return size;
 }
 
+//--------------------------------------------------//
+
 void init_rand(int size, int perc)
 {
 	matr = new int*[size];
@@ -102,12 +123,37 @@ void init_rand(int size, int perc)
 		}
 	}
 
-	for (int i = 0; i < size; i++)
+	/*for (int i = 0; i < size; i++)
 	{
 		for (int j = 0; j < size; j++)
 		{
 			printf("%d ", matr[i][j]);
 		}
 		printf("\n");
+	}*/
+}
+
+//----------------------------------------------//
+
+void exper(int num, int size, int perc)
+{
+	int cyc_num = 0;
+	double st_time, en_time, avg_time = 0;
+	for (int i = 0; i < num; i++)
+	{
+		init_rand(size, perc);
+		st_time = GetTickCount()/1000;
+		if (hamilton_cycle::search(matr, size, st))
+			cyc_num++;
+
+		en_time = GetTickCount() / 1000;
+		avg_time = (avg_time*i + (en_time - st_time) / 1000) / (i + 1);
+		
+		for (int i = 0; i < size; i++)
+			delete[] matr[i];
+		delete[] matr;
 	}
+
+	cout << endl << "Число графов с гамильтоновым циклом: " << cyc_num << endl;
+	cout << "Среднее время вычислений: " << avg_time << endl;
 }
