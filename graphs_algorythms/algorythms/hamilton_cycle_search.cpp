@@ -45,7 +45,7 @@ bool hamilton_cycle::search(int **matr, int size, stack<int> &path)
 				if (path.size() == size && matr[path.top()][a])
 					return true;
 				else if (path.size() == size)
-					return false;
+					path.pop();
 			}
 		}
 		else
