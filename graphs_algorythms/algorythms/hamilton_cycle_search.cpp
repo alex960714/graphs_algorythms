@@ -28,8 +28,9 @@ bool hamilton_cycle::search(int **matr, int size, stack<int> &path)
 	stack<int> *N = new stack<int>[size];
 
 	path.push(a);
-	for (int i = 0; i < size; i++)
-		init(matr, size, N[i], i);
+	/*for (int i = 0; i < size; i++)
+		init(matr, size, N[i], i);*/
+	init(matr, size, N[a], a);
 
 	while (!path.empty())
 	{

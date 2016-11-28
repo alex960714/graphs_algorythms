@@ -3,6 +3,7 @@
 #include <stack>
 #include <fstream>
 #include <Windows.h>
+#include <time.h>
 #include <iostream>
 using namespace std;
 
@@ -15,6 +16,7 @@ stack<int> st;
 
 int main(int argc, char** argv)
 {
+	srand(time(NULL));
 	setlocale(LC_CTYPE, "Russian");
 	int size, perc;
 	double st_time, en_time;
@@ -37,6 +39,10 @@ int main(int argc, char** argv)
 			cin >> perc;
 			cout << "Введите число экспериментов:" << endl;
 			cin >> graph_num;
+
+			matr = new int*[size];
+			for (int i = 0; i < size; i++)
+				matr[i] = new int[size];
 
 			if (graph_num == 1)
 			{
@@ -73,12 +79,11 @@ int main(int argc, char** argv)
 			printf("No hamilton cycle\n");
 		}
 		printf("Time: %f\n", (en_time - st_time) / 1000);
-
-
-		for (int i = 0; i < size; i++)
-			delete[] matr[i];
-		delete[] matr;
 	}
+
+	for (int i = 0; i < size; i++)
+		delete[] matr[i];
+	delete[] matr;
 	return 0;
 }
 
@@ -111,9 +116,9 @@ int init_file(char* file_name)
 
 void init_rand(int size, int perc)
 {
-	matr = new int*[size];
+	/*matr = new int*[size];
 	for (int i = 0; i < size; i++)
-		matr[i] = new int[size];
+		matr[i] = new int[size];*/
 	for (int i = 0; i < size; i++)
 	{
 		matr[i][i] = 0;
@@ -139,21 +144,52 @@ void exper(int num, int size, int perc)
 {
 	int cyc_num = 0;
 	double st_time, en_time, avg_time = 0;
+	ofstream os;
+	os.open("results.txt");
 	for (int i = 0; i < num; i++)
 	{
 		init_rand(size, perc);
-		st_time = GetTickCount()/1000;
-		if (hamilton_cycle::search(matr, size, st))
-			cyc_num++;
-
-		en_time = GetTickCount() / 1000;
-		avg_time = (avg_time*i + (en_time - st_time) / 1000) / (i + 1);
-		
 		for (int i = 0; i < size; i++)
+		{
+			for (int j = 0; j < size; j++)
+			{
+				os << matr[i][j] << " ";
+			}
+			os << endl;
+		}
+		st_time = GetTickCount() / 1000;
+		if (hamilton_cycle::search(matr, size, st))
+		{
+			cyc_num++;
+			en_time = GetTickCount() / 1000;
+			os << "Hamilton cycle:" << endl;
+			while (!st.empty())
+			{
+				os << st.top() << " ";
+				st.pop();
+			}
+			os << endl;
+		}
+		else
+		{
+			en_time = GetTickCount() / 1000;
+			os << "No hamilton cycle" << endl;
+		}
+
+		os << "Time: " << (en_time - st_time) << endl;
+		avg_time = (avg_time*i + (en_time - st_time)) / (i + 1);
+		
+		/*for (int i = 0; i < size; i++)
 			delete[] matr[i];
-		delete[] matr;
+		delete[] matr;*/
+
+		os << "---------------------------" << endl;
 	}
 
 	cout << endl << "Число графов с гамильтоновым циклом: " << cyc_num << endl;
 	cout << "Среднее время вычислений: " << avg_time << endl;
+
+	os << endl << "Число графов с гамильтоновым циклом: " << cyc_num << endl;
+	os << "Среднее время вычислений: " << avg_time << endl;
+	os.close();
 }
