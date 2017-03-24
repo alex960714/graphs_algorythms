@@ -23,14 +23,11 @@ bool hamilton_cycle::find_elem(stack<int> st, int elem)
 
 bool hamilton_cycle::search(int **matr, int size, stack<int> &path)
 {
-	int a = 0;
-	//stack<int> path;
-	stack<int> *N = new stack<int>[size];
+	int a = 0;                              //стартовая вершина
+	stack<int> *N = new stack<int>[size];   //множество вершин, смежных с текущей, ребро между которыми ещё не рассматривалось
 
 	path.push(a);
-	/*for (int i = 0; i < size; i++)
-		init(matr, size, N[i], i);*/
-	init(matr, size, N[a], a);
+	init(matr, size, N[a], a);				//инициализация множества смежных вершин
 
 	while (!path.empty())
 	{

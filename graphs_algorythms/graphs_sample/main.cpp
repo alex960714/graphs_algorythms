@@ -9,7 +9,8 @@ using namespace std;
 
 int init_file(char* file_name);
 void init_rand(int size, int perc);
-void exper(int num, int size, int perc);
+void init_bigraph(int size, int perc);
+void exper(int num, int size, int perc, int type);
 
 int **matr;
 stack<int> st;
@@ -25,7 +26,8 @@ int main(int argc, char** argv)
 
 	do
 	{
-		cout << "Введите номер действия:" << endl << "1. Чтение из файла" << endl << "2. Заполнение случайными числами:" << endl;
+		cout << "Введите номер действия:" << endl << "1. Чтение из файла" << endl << "Заполнение случайными числами:"<<endl<<"2.Обыкновенный граф:" << endl;
+		cout << "3.Двудольный граф" << endl << "4.Расщепляемый граф" << endl;
 		cin >> op;
 		switch (op)
 		{
@@ -33,6 +35,8 @@ int main(int argc, char** argv)
 			size = init_file("graph_adj.txt");
 			break;
 		case 2:
+		case 3:
+		case 4:
 			cout << "Введите число вершин:" << endl;
 			cin >> size;
 			cout << "Введите процент плотности графа:" << endl;
@@ -50,14 +54,14 @@ int main(int argc, char** argv)
 			}
 			else
 			{
-				exper(graph_num, size, perc);
+				exper(graph_num, size, perc, op - 1);
 			}
 
 			break;
 		default:
 			cout << "Неправильный номер операции!" << endl;
 		}
-	} while (op != 1 && op != 2);
+	} while (op < 1 && op > 4);
 
 	if (graph_num == 1)
 	{
@@ -78,7 +82,7 @@ int main(int argc, char** argv)
 			en_time = GetTickCount();
 			printf("No hamilton cycle\n");
 		}
-		printf("Time: %f\n", (en_time - st_time) / 1000);
+		printf("Time: %f\n", (en_time - st_time) / 1000.0);
 	}
 
 	for (int i = 0; i < size; i++)
@@ -104,9 +108,9 @@ int init_file(char* file_name)
 		for (int j = 0; j < size; j++)
 		{
 			is >> matr[i][j];
-			printf("%d ", matr[i][j]);
+			//printf("%d ", matr[i][j]);
 		}
-		printf("\n");
+		//printf("\n");
 	}
 	is.close();
 	return size;
@@ -128,19 +132,55 @@ void init_rand(int size, int perc)
 		}
 	}
 
-	/*for (int i = 0; i < size; i++)
+	if (size <= 15)
 	{
-		for (int j = 0; j < size; j++)
+		for (int i = 0; i < size; i++)
 		{
-			printf("%d ", matr[i][j]);
+			for (int j = 0; j < size; j++)
+			{
+				printf("%d ", matr[i][j]);
+			}
+			printf("\n");
 		}
-		printf("\n");
-	}*/
+	}
+}
+
+//-------------------------------------------------//
+
+void init_bigraph(int size, int perc)
+{
+	for (int i = 0; i < size/2; i++)
+	{
+		for (int j = 0; j < size / 2; j++)
+		{
+			matr[i][j] = matr[j][i] = 0;
+		}
+		for (int j = size/2; j < size; j++)
+		{
+			matr[i][j] = matr[j][i] = (rand() % 100 < perc);
+			for (int k = size / 2; k < size; k++)
+			{
+				matr[j][k] = matr[k][j] = 0;
+			}
+		}
+	}
+	if (size <= 15)
+	{
+		for (int i = 0; i < size; i++)
+		{
+			for (int j = 0; j < size; j++)
+			{
+				printf("%d ", matr[i][j]);
+			}
+			printf("\n");
+		}
+	}
+	printf("\n");
 }
 
 //----------------------------------------------//
 
-void exper(int num, int size, int perc)
+void exper(int num, int size, int perc, int type)
 {
 	int cyc_num = 0;
 	double st_time, en_time, avg_time = 0;
@@ -148,20 +188,33 @@ void exper(int num, int size, int perc)
 	os.open("results.txt");
 	for (int i = 0; i < num; i++)
 	{
-		init_rand(size, perc);
-		for (int i = 0; i < size; i++)
+		switch (type)
 		{
-			for (int j = 0; j < size; j++)
-			{
-				os << matr[i][j] << " ";
-			}
-			os << endl;
+		case 1:
+			init_rand(size, perc);
+			break;
+		case 2:
+			init_bigraph(size, perc);
+			break;
+		case 3:
+			;
 		}
-		st_time = GetTickCount() / 1000;
+		if (size < 100)
+		{
+			for (int i = 0; i < size; i++)
+			{
+				for (int j = 0; j < size; j++)
+				{
+					os << matr[i][j] << " ";
+				}
+				os << endl;
+			}
+		}
+		st_time = GetTickCount() / 1000.0;
 		if (hamilton_cycle::search(matr, size, st))
 		{
 			cyc_num++;
-			en_time = GetTickCount() / 1000;
+			en_time = GetTickCount() / 1000.0;
 			os << "Hamilton cycle:" << endl;
 			while (!st.empty())
 			{
@@ -172,7 +225,7 @@ void exper(int num, int size, int perc)
 		}
 		else
 		{
-			en_time = GetTickCount() / 1000;
+			en_time = GetTickCount() / 1000.0;
 			os << "No hamilton cycle" << endl;
 		}
 
