@@ -10,6 +10,7 @@ using namespace std;
 int init_file(char* file_name);
 void init_rand(int size, int perc);
 void init_bigraph(int size, int perc);
+void init_split(int size, int perc);
 void exper(int num, int size, int perc, int type);
 
 int **matr;
@@ -165,16 +166,42 @@ void init_bigraph(int size, int perc)
 		}
 	}
 	if (size <= 15)
-	{
 		for (int i = 0; i < size; i++)
 		{
 			for (int j = 0; j < size; j++)
-			{
 				printf("%d ", matr[i][j]);
-			}
 			printf("\n");
 		}
+	printf("\n");
+}
+
+//-----------------------------------------------//
+
+void init_split(int size, int perc)
+{
+	int clique = rand() % (int)(size * (perc/100.0)) + 1;
+	for (int i = 0; i < clique; i++)
+	{
+		for (int j = 0; j < clique; j++)
+			matr[i][j] = matr[j][i] = 1;
+
+		matr[i][i] = 0;
+
+		for (int j = clique; j < size; j++)
+			matr[i][j] = matr[j][i] = (rand() % 100 < perc);
 	}
+
+	for (int i = clique; i < size; i++)
+		for (int j = clique; j < size; j++)
+			matr[i][j] = matr[j][i] = 0;
+
+	if (size <= 15)
+		for (int i = 0; i < size; i++)
+		{
+			for (int j = 0; j < size; j++)
+				printf("%d ", matr[i][j]);
+			printf("\n");
+		}
 	printf("\n");
 }
 
@@ -197,7 +224,8 @@ void exper(int num, int size, int perc, int type)
 			init_bigraph(size, perc);
 			break;
 		case 3:
-			;
+			init_split(size,perc);
+			break;
 		}
 		if (size < 100)
 		{
