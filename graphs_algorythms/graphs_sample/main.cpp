@@ -166,20 +166,22 @@ void init_bigraph(int size, int perc)
 		}
 	}
 	if (size <= 15)
+	{
 		for (int i = 0; i < size; i++)
 		{
 			for (int j = 0; j < size; j++)
 				printf("%d ", matr[i][j]);
 			printf("\n");
 		}
-	printf("\n");
+		printf("\n");
+	}
 }
 
 //-----------------------------------------------//
 
 void init_split(int size, int perc)
 {
-	int clique = rand() % (int)(size * (perc/100.0)) + 1;
+	int clique = (int)(size * (perc/100.0));
 	for (int i = 0; i < clique; i++)
 	{
 		for (int j = 0; j < clique; j++)
@@ -196,13 +198,15 @@ void init_split(int size, int perc)
 			matr[i][j] = matr[j][i] = 0;
 
 	if (size <= 15)
+	{
 		for (int i = 0; i < size; i++)
 		{
 			for (int j = 0; j < size; j++)
 				printf("%d ", matr[i][j]);
 			printf("\n");
 		}
-	printf("\n");
+		printf("\n");
+	}
 }
 
 //----------------------------------------------//
