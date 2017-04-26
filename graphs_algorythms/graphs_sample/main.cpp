@@ -5,6 +5,7 @@
 #include <Windows.h>
 #include <time.h>
 #include <iostream>
+#include <vector>
 using namespace std;
 
 int init_file(char* file_name);
@@ -14,6 +15,8 @@ void init_split(int size, int perc);
 void exper(int num, int size, int perc, int type);
 void exper_bigraph(int num, int size, int perc);
 void exper_split(int num, int size, int perc);
+int bron_kerbosch(int size, vector<int> compsub, vector<int> cand, vector<int> not);
+bool search_neighboors(int size, vector<int> cand, vector<int> not);
 
 int **matr;
 stack<int> st;
@@ -271,9 +274,11 @@ void exper_bigraph(int num, int size, int perc)
 			for (int i = 0; i < size; i++)
 			{
 				if (matr[curr_vert][i])
-					discover[i] = (discover[curr_vert] + 1) % 2;
+					discover[i] = (discover[curr_vert] + 1) % 2;  //????????????????
 			}
 		}
+
+		//TODO: BFS
 	}
 }
 
@@ -283,6 +288,11 @@ void exper_split(int num, int size, int perc)
 {
 	int cyc_num = 0;
 	double st_time, en_time, avg_time = 0;
+	vector<int> clique, candidates, not;
+	for (int i = 0; i < size; i++)
+	{
+		candidates.push_back(i);
+	}
 	ofstream os;
 	os.open("results.txt");
 	for (int i = 0; i < num; i++)
@@ -300,7 +310,9 @@ void exper_split(int num, int size, int perc)
 			}
 		}
 		st_time = GetTickCount() / 1000.0;
-		if (perc >= 50 && hamilton_cycle::search(matr, size, st))
+		int clique_size = bron_kerbosch(size, clique, candidates, not);
+		os << "Clique size: " << clique_size << endl;
+		if (clique_size >= size/2 && hamilton_cycle::search(matr, size, st))
 		{
 			cyc_num++;
 			en_time = GetTickCount() / 1000.0;
@@ -335,3 +347,61 @@ void exper_split(int num, int size, int perc)
 	os << "Среднее время вычислений: " << avg_time << endl;
 	os.close();
 }
+
+//-------------------------------------------------//
+
+int bron_kerbosch(int size, vector<int> compsub, vector<int> cand, vector<int> not)
+{
+	int curr_size = 0;
+	vector<int>::iterator it;
+	vector<int> new_cand, new_not;
+
+	while (!cand.empty() && !search_neighboors(size, cand, not))
+	{
+		int curr_vert = cand.back();
+		compsub.push_back(curr_vert);
+		new_cand.clear();
+		new_not.clear();
+
+		for (it = cand.begin(); it != cand.end(); ++it)
+		{
+			if (matr[*it][curr_vert])
+				new_cand.push_back(*it);
+		}
+		for (it = not.begin(); it != not.end(); ++it)
+		{
+			if (matr[*it][curr_vert])
+				new_not.push_back(*it);
+		}
+
+		int new_size;
+		if (new_cand.empty() && new_not.empty())
+			new_size = compsub.size();
+		else
+			new_size = bron_kerbosch(size, compsub, new_cand, new_not);
+		
+		if (new_size > curr_size) curr_size=new_size;
+		compsub.pop_back();
+		cand.pop_back();
+		not.push_back(curr_vert);
+	}
+	return curr_size;
+}
+
+//---------------------------------------------------//
+
+bool search_neighboors(int size, vector<int> cand, vector<int> not)
+{
+	if (not.empty()) return false;
+	vector<int>::iterator it1, it2;
+	for (it1 = not.begin(); it1 != not.end(); ++it1)
+	{
+		for (it2 = cand.begin(); it2 != cand.end(); ++it2)
+		{
+			if (!matr[*it1][*it2])
+				return false;
+		}
+	}
+	return true;
+}
+
