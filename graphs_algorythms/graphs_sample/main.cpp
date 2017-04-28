@@ -6,6 +6,7 @@
 #include <time.h>
 #include <iostream>
 #include <vector>
+#include <queue>
 using namespace std;
 
 int init_file(char* file_name);
@@ -17,6 +18,7 @@ void exper_bigraph(int num, int size, int perc);
 void exper_split(int num, int size, int perc);
 int bron_kerbosch(int size, vector<int> compsub, vector<int> cand, vector<int> not);
 bool search_neighboors(int size, vector<int> cand, vector<int> not);
+int BFS(int size);
 
 int **matr;
 stack<int> st;
@@ -254,32 +256,76 @@ void exper(int num, int size, int perc, int type)
 void exper_bigraph(int num, int size, int perc)
 {
 	int cyc_num = 0;
-	double st_time, en_time, avg_time = 0;
+	double st_time, en_time, avg_time = 0; 
+	vector<int> clique, candidates, not;
+	for (int i = 0; i < size; i++)
+	{
+		candidates.push_back(i);
+	}
 	ofstream os;
 	os.open("results.txt");
 	for (int i = 0; i < num; i++)
 	{
-		init_split(size, perc);
-
-		int curr_vert;
-		int* discover = new int[size];
-		discover[0] = 0;
-		for (int i = 0; i < size; i++)
-			discover[i] = -1;
-
-		curr_vert = 0;
-		int vert_num = 1;
-		while (vert_num < size)
+		init_bigraph(size, perc);
+		if (size < 100)
 		{
 			for (int i = 0; i < size; i++)
 			{
-				if (matr[curr_vert][i])
-					discover[i] = (discover[curr_vert] + 1) % 2;  //????????????????
+				for (int j = 0; j < size; j++)
+				{
+					os << matr[i][j] << " ";
+				}
+				os << endl;
 			}
 		}
+		st_time = GetTickCount() / 1000.0;
 
-		//TODO: BFS
+		/*for (int i = 0; i < size; i++)
+			for (int j = 0; j < size; j++)
+				if (i != j)
+					matr[i][j] = 1 - matr[i][j];*/
+		//int part_size = bron_kerbosch(size, clique, candidates, not);
+		int part_size = BFS(size);
+		os << "Partition size: " << part_size << endl;
+
+		/*for (int i = 0; i < size; i++)
+			for (int j = 0; j < size; j++)
+				if (i != j)
+					matr[i][j] = 1 - matr[i][j];*/
+		if (part_size == size/2 && hamilton_cycle::search(matr, size, st))
+		{
+			cyc_num++;
+			en_time = GetTickCount() / 1000.0;
+			os << "Hamilton cycle:" << endl;
+			while (!st.empty())
+			{
+				os << st.top() << " ";
+				st.pop();
+			}
+			os << endl;
+		}
+		else
+		{
+			en_time = GetTickCount() / 1000.0;
+			os << "No hamilton cycle" << endl;
+		}
+
+		os << "Time: " << (en_time - st_time) << endl;
+		avg_time = (avg_time*i + (en_time - st_time)) / (i + 1);
+
+		/*for (int i = 0; i < size; i++)
+		delete[] matr[i];
+		delete[] matr;*/
+
+		os << "---------------------------" << endl;
 	}
+
+	cout << endl << "Число графов с гамильтоновым циклом: " << cyc_num << endl;
+	cout << "Среднее время вычислений: " << avg_time << endl;
+
+	os << endl << "Число графов с гамильтоновым циклом: " << cyc_num << endl;
+	os << "Среднее время вычислений: " << avg_time << endl;
+	os.close();
 }
 
 //---------------------------------------------//
@@ -403,5 +449,34 @@ bool search_neighboors(int size, vector<int> cand, vector<int> not)
 		}
 	}
 	return true;
+}
+
+//---------------------------------------------------//
+
+int BFS(int size)
+{
+	int curr_vert, part = 0;
+	int *part_num = new int[size];
+	queue<int> q;
+	q.push(0);
+	part_num[0] = 1;
+	for (int i = 1; i < size; i++)
+		part_num[i] = 0;
+	while (!q.empty())
+	{
+		curr_vert = q.front();
+		q.pop();
+		for (int i = 0; i < size; i++)
+		{
+			if (matr[curr_vert][i] && !part_num[i])
+			{
+				q.push(i);
+				part_num[i] = 3 - part_num[curr_vert];
+				if (part_num[i] == 2)
+					part++;
+			}
+		}
+	}
+	return part;
 }
 
