@@ -16,7 +16,7 @@ void init_split(int size, int perc);
 void exper(int num, int size, int perc, int type);
 void exper_bigraph(int num, int size, int perc);
 void exper_split(int num, int size, int perc);
-int bron_kerbosch(int size, vector<int> compsub, vector<int> cand, vector<int> not);
+int bron_kerbosch(int size, vector<int> *compsub, vector<int> cand, vector<int> not);
 bool search_neighboors(int size, vector<int> cand, vector<int> not);
 int BFS(int size);
 
@@ -285,14 +285,14 @@ void exper_bigraph(int num, int size, int perc)
 				if (i != j)
 					matr[i][j] = 1 - matr[i][j];*/
 		//int part_size = bron_kerbosch(size, clique, candidates, not);
-		int part_size = BFS(size);
-		os << "Partition size: " << part_size << endl;
+		/*int part_size = BFS(size);
+		os << "Partition size: " << part_size << endl;*/
 
 		/*for (int i = 0; i < size; i++)
 			for (int j = 0; j < size; j++)
 				if (i != j)
 					matr[i][j] = 1 - matr[i][j];*/
-		if (part_size == size/2 && hamilton_cycle::search(matr, size, st))
+		if (/*part_size == size/2 && */hamilton_cycle::search(matr, size, st))
 		{
 			cyc_num++;
 			en_time = GetTickCount() / 1000.0;
@@ -334,7 +334,8 @@ void exper_split(int num, int size, int perc)
 {
 	int cyc_num = 0;
 	double st_time, en_time, avg_time = 0;
-	vector<int> clique, candidates, not;
+	vector<int> *clique, candidates, not;
+	clique = new vector<int>();
 	for (int i = 0; i < size; i++)
 	{
 		candidates.push_back(i);
@@ -396,7 +397,7 @@ void exper_split(int num, int size, int perc)
 
 //-------------------------------------------------//
 
-int bron_kerbosch(int size, vector<int> compsub, vector<int> cand, vector<int> not)
+int bron_kerbosch(int size, vector<int> *compsub, vector<int> cand, vector<int> not)
 {
 	int curr_size = 0;
 	vector<int>::iterator it;
@@ -405,7 +406,7 @@ int bron_kerbosch(int size, vector<int> compsub, vector<int> cand, vector<int> n
 	while (!cand.empty() && !search_neighboors(size, cand, not))
 	{
 		int curr_vert = cand.back();
-		compsub.push_back(curr_vert);
+		compsub->push_back(curr_vert);
 		new_cand.clear();
 		new_not.clear();
 
@@ -422,12 +423,12 @@ int bron_kerbosch(int size, vector<int> compsub, vector<int> cand, vector<int> n
 
 		int new_size;
 		if (new_cand.empty() && new_not.empty())
-			new_size = compsub.size();
+			new_size = compsub->size();
 		else
 			new_size = bron_kerbosch(size, compsub, new_cand, new_not);
 		
 		if (new_size > curr_size) curr_size=new_size;
-		compsub.pop_back();
+		compsub->pop_back();
 		cand.pop_back();
 		not.push_back(curr_vert);
 	}
