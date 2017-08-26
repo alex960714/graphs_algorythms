@@ -65,3 +65,21 @@ bool My_graph::isAdjacent(int node1, int node2)
 		return false;
 	return adj_matr[node1][node2];
 }
+
+void My_graph::addEdge(int node1, int node2)
+{
+	if (node1 >= 0 && node1 < NodesNum && node2 >= 0 && node2 < NodesNum && !adj_matr[node1][node2] && node1 != node2)
+	{
+		adj_matr[node1][node2] = adj_matr[node2][node1] = 1;
+		EdgesNum++;
+	}
+}
+
+void My_graph::removeEdge(int node1, int node2)
+{
+	if (node1 >= 0 && node1 < NodesNum && node2 >= 0 && node2 < NodesNum && adj_matr[node1][node2])
+	{
+		adj_matr[node1][node2] = adj_matr[node2][node1] = 0;
+		EdgesNum--;
+	}
+}

@@ -27,6 +27,9 @@ public:
 
 	bool isAdjacent(int node1, int node2);                  
 	bool IsEmpty() { return !NodesNum; };
+
+	void addEdge(int node1, int node2);
+	void removeEdge(int node1, int node2);
 };
 
 
