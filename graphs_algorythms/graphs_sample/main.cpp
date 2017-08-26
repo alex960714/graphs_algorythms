@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "hamilton_cycle_search.h"
+#include "my_graph.h"
 #include <stack>
 #include <fstream>
 #include <Windows.h>
@@ -7,9 +8,10 @@
 #include <iostream>
 #include <vector>
 #include <queue>
+#include <string>
 using namespace std;
 
-int init_file(char* file_name);
+int init_file(const char* file_name);
 void init_rand(int size, int perc);
 void init_bigraph(int size, int perc);
 void init_split(int size, int perc);
@@ -22,6 +24,7 @@ int BFS(int size);
 
 int **matr;
 stack<int> st;
+My_graph *graph;
 
 int main(int argc, char** argv)
 {
@@ -29,6 +32,7 @@ int main(int argc, char** argv)
 	setlocale(LC_CTYPE, "Russian");
 	int size, perc;
 	double st_time, en_time;
+	string file_name;
 	
 	int op, graph_num = 1;
 
@@ -47,6 +51,7 @@ int main(int argc, char** argv)
 			cout << "Введите число экспериментов:" << endl;
 			cin >> graph_num;
 
+			//graph = new My_graph(size);
 			matr = new int*[size];
 			for (int i = 0; i < size; i++)
 				matr[i] = new int[size];
@@ -54,6 +59,16 @@ int main(int argc, char** argv)
 		switch (op)
 		{
 		case 1:
+			cout << "Введите имя или полный путь до файла:" << endl;
+			cin >> file_name;
+			size = init_file(file_name.c_str());
+			if (size == -1)
+			{
+				cout << "Неверный путь или имя файла!" << endl;
+				break;
+			}
+			perc = 0;
+			graph_num = 1;
 		case 2:
 			exper(graph_num, size, perc, op);
 			break;
@@ -76,11 +91,15 @@ int main(int argc, char** argv)
 
 //--------------------------------------------------------//
 
-int init_file(char* file_name)
+int init_file(const char* file_name)
 {
 	ifstream is;
 	int size;
-	is.open("graph_adj.txt");
+	is.open(file_name);
+
+	if (!is.is_open())
+		return -1;
+
 	is >> size;
 	matr = new int*[size];
 	for (int i = 0; i < size; i++)
