@@ -42,6 +42,7 @@ int** My_graph::getAdjMatr(int& len)
 
 void My_graph::setAdjMatr(int** matr, int len)
 {
+	My_graph::~My_graph();
 	adj_matr = new int*[len];
 	for (int i = 0; i < len; i++)
 		adj_matr[i] = new int[len];
@@ -55,5 +56,5 @@ void My_graph::setAdjMatr(int** matr, int len)
 			adj_matr[i][j] = matr[i][j];
 			EdgesNum++;
 		}
-	EdgesNum /= 2;
+	EdgesNum >> 1;
 }
