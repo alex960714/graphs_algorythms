@@ -25,6 +25,7 @@ public:
 	void setAdjMatr(int** matr, int len);
 	//void setIncMatr(int** matr, int len);
 
+	bool isAdjacent(int node1, int node2);                  
 	bool IsEmpty() { return !NodesNum; };
 };
 
