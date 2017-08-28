@@ -1,13 +1,28 @@
 #include "my_graph.h"
 
+void My_graph::getMem()
+{
+	adj_matr = new int*[NodesNum];
+	for (int i = 0; i < NodesNum; i++)
+		adj_matr[i] = new int[NodesNum];
+}
+
+void My_graph::cleanMem()
+{
+	if (adj_matr != NULL)
+	{
+		for (int i = 0; i < NodesNum; i++)
+			delete[] adj_matr[i];
+		delete[] adj_matr;
+	}
+}
+
 My_graph::My_graph(int nodes)
 {
 	NodesNum = nodes;
 	EdgesNum = 0;
 
-	adj_matr = new int*[nodes];
-	for (int i = 0; i < NodesNum; i++)
-		adj_matr[i] = new int[nodes];
+	getMem();
 
 	for (int i = 0; i < NodesNum; i++)
 		for (int j = 0; j < NodesNum; j++)
@@ -21,9 +36,7 @@ My_graph::My_graph(int** matr, int nodes)
 
 My_graph::~My_graph()
 {
-	for (int i = 0; i < NodesNum; i++)
-		delete[] adj_matr[i];
-	delete[] adj_matr;
+	cleanMem();
 }
 
 int** My_graph::getAdjMatr(int& len)
@@ -42,10 +55,8 @@ int** My_graph::getAdjMatr(int& len)
 
 void My_graph::setAdjMatr(int** matr, int len)
 {
-	My_graph::~My_graph();
-	adj_matr = new int*[len];
-	for (int i = 0; i < len; i++)
-		adj_matr[i] = new int[len];
+	cleanMem();
+	getMem();
 
 	NodesNum = len;
 	EdgesNum = 0;
@@ -87,21 +98,18 @@ void My_graph::removeEdge(int node1, int node2)
 int My_graph::init_file(const char * file_name)
 {
 	ifstream is;
-	int size;
 	is.open(file_name);
 
 	if (!is.is_open())
 		return -1;
 
-	is >> size;
-	My_graph::~My_graph();
-	adj_matr = new int*[size];
-	for (int i = 0; i < size; i++)
-		adj_matr[i] = new int[size];
+	is >> NodesNum;
+	cleanMem();
+	getMem();
 
-	for (int i = 0; i < size; i++)
+	for (int i = 0; i < NodesNum; i++)
 	{
-		for (int j = 0; j < size; j++)
+		for (int j = 0; j < NodesNum; j++)
 		{
 			is >> adj_matr[i][j];
 			//printf("%d ", matr[i][j]);
@@ -109,5 +117,5 @@ int My_graph::init_file(const char * file_name)
 		//printf("\n");
 	}
 	is.close();
-	return size;
+	return NodesNum;
 }

@@ -12,6 +12,9 @@ private:
 	int NodesNum;
 	int EdgesNum;
 
+	void getMem();
+	void cleanMem();
+
 public:
 	My_graph() { NodesNum = 0; EdgesNum = 0; };
 	My_graph(int nodes);
