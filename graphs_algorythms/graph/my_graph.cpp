@@ -70,10 +70,10 @@ void My_graph::setAdjMatr(int** matr, int len)
 	EdgesNum >>= 1;
 }
 
-bool My_graph::isAdjacent(int node1, int node2)
+int My_graph::isAdjacent(int node1, int node2)
 {
 	if (node1 < 0 || node1 >= NodesNum || node2 < 0 || node2 >= NodesNum)
-		return false;
+		return -1;
 	return adj_matr[node1][node2];
 }
 
