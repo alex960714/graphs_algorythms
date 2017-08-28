@@ -83,3 +83,31 @@ void My_graph::removeEdge(int node1, int node2)
 		EdgesNum--;
 	}
 }
+
+int My_graph::init_file(const char * file_name)
+{
+	ifstream is;
+	int size;
+	is.open(file_name);
+
+	if (!is.is_open())
+		return -1;
+
+	is >> size;
+	My_graph::~My_graph();
+	adj_matr = new int*[size];
+	for (int i = 0; i < size; i++)
+		adj_matr[i] = new int[size];
+
+	for (int i = 0; i < size; i++)
+	{
+		for (int j = 0; j < size; j++)
+		{
+			is >> adj_matr[i][j];
+			//printf("%d ", matr[i][j]);
+		}
+		//printf("\n");
+	}
+	is.close();
+	return size;
+}

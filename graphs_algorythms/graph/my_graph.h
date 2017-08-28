@@ -1,6 +1,8 @@
 #ifndef _MY_GRAPH_H_
 #define _MY_GRAPH_H_
 
+#include <fstream>
+using namespace std;
 
 class My_graph
 {
@@ -30,6 +32,8 @@ public:
 
 	void addEdge(int node1, int node2);
 	void removeEdge(int node1, int node2);
+
+	int init_file(const char* file_name);  //reading adjecency matrix from file. Return size number of nodes if the path is correct. Otherwise, return -1.
 };
 
 
