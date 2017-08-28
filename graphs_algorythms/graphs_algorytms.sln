@@ -1,13 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "graphs_sample", "graphs_sample\graphs_sample.vcxproj", "{4C9C0744-2A15-4A34-8DA8-9EAA6B420D6C}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "graph", "graph\graph.vcxproj", "{60ACDC64-45FD-4C43-AE9D-1CB22D63EFD4}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "algorythms", "algorythms\algorythms.vcxproj", "{58F14E7D-E57D-4E42-9114-3FDEE17FB5EF}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "my_graph_sample", "my_graph_sample\my_graph_sample.vcxproj", "{F6296F8A-8871-411C-BB6E-012B20EC0CB3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,6 +43,14 @@ Global
 		{58F14E7D-E57D-4E42-9114-3FDEE17FB5EF}.Release|x64.Build.0 = Release|x64
 		{58F14E7D-E57D-4E42-9114-3FDEE17FB5EF}.Release|x86.ActiveCfg = Release|Win32
 		{58F14E7D-E57D-4E42-9114-3FDEE17FB5EF}.Release|x86.Build.0 = Release|Win32
+		{F6296F8A-8871-411C-BB6E-012B20EC0CB3}.Debug|x64.ActiveCfg = Debug|x64
+		{F6296F8A-8871-411C-BB6E-012B20EC0CB3}.Debug|x64.Build.0 = Debug|x64
+		{F6296F8A-8871-411C-BB6E-012B20EC0CB3}.Debug|x86.ActiveCfg = Debug|Win32
+		{F6296F8A-8871-411C-BB6E-012B20EC0CB3}.Debug|x86.Build.0 = Debug|Win32
+		{F6296F8A-8871-411C-BB6E-012B20EC0CB3}.Release|x64.ActiveCfg = Release|x64
+		{F6296F8A-8871-411C-BB6E-012B20EC0CB3}.Release|x64.Build.0 = Release|x64
+		{F6296F8A-8871-411C-BB6E-012B20EC0CB3}.Release|x86.ActiveCfg = Release|Win32
+		{F6296F8A-8871-411C-BB6E-012B20EC0CB3}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

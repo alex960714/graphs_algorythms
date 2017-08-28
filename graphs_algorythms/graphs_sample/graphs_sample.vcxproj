@@ -89,7 +89,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>C:\Users\Александр\Documents\GitHub\graphs_algorythms\graphs_algorythms\algorythms;C:\Users\Александр\Documents\GitHub\graphs_algorythms\graphs_algorythms\graph;C:\Users\User\Documents\GitHub\graphs_algorythms\graphs_algorythms\algorythms;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\User\Documents\GitHub\graphs_algorythms\graphs_algorythms\graph;C:\Users\Александр\Documents\GitHub\graphs_algorythms\graphs_algorythms\algorythms;C:\Users\Александр\Documents\GitHub\graphs_algorythms\graphs_algorythms\graph;C:\Users\User\Documents\GitHub\graphs_algorythms\graphs_algorythms\algorythms;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
