@@ -67,7 +67,7 @@ void My_graph::setAdjMatr(int** matr, int len)
 			adj_matr[i][j] = matr[i][j];
 			EdgesNum++;
 		}
-	EdgesNum >> 1;
+	EdgesNum >>= 1;
 }
 
 bool My_graph::isAdjacent(int node1, int node2)
@@ -95,7 +95,7 @@ void My_graph::removeEdge(int node1, int node2)
 	}
 }
 
-int My_graph::init_file(const char * file_name)
+int My_graph::init_from_file(const char * file_name)
 {
 	ifstream is;
 	is.open(file_name);
@@ -104,18 +104,19 @@ int My_graph::init_file(const char * file_name)
 		return -1;
 
 	is >> NodesNum;
+	EdgesNum = 0;
 	cleanMem();
 	getMem();
 
 	for (int i = 0; i < NodesNum; i++)
-	{
 		for (int j = 0; j < NodesNum; j++)
 		{
 			is >> adj_matr[i][j];
-			//printf("%d ", matr[i][j]);
+			if (adj_matr[i][j])
+				EdgesNum++;
 		}
-		//printf("\n");
-	}
+
+	EdgesNum >>= 1;
 	is.close();
 	return NodesNum;
 }

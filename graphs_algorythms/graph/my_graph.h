@@ -36,7 +36,7 @@ public:
 	void addEdge(int node1, int node2);
 	void removeEdge(int node1, int node2);
 
-	int init_file(const char* file_name);  //reading adjecency matrix from file. Return size number of nodes if the path is correct. Otherwise, return -1.
+	int init_from_file(const char* file_name);      //reading adjecency matrix from file. Return size number of nodes if the path is correct. Otherwise, return -1
 };
 
 

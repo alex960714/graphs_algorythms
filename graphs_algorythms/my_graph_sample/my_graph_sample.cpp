@@ -11,7 +11,7 @@ using namespace std;
 int main()
 {
 	My_graph *gr = new My_graph();
-	int size = gr->init_file("graph_adj.txt");
+	int size = gr->init_from_file("graph_adj.txt");
 	cout << "Nodes number: " << size << endl;
 	int size2;
 	int **matr = gr->getAdjMatr(size2);
@@ -22,6 +22,7 @@ int main()
 			cout << matr[i][j] << " ";
 		cout << endl;
 	}
+	cout << "Edges number: " << gr->getEdgesNum() << endl;
     return 0;
 }
 
