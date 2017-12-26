@@ -59,6 +59,12 @@ void hamilton_cycle::dirac_search(int ** matr, int size, list<int>& path)
 	int a = 0, curr_vert;
 	vector<int> out;
 
+	bool hasNext;
+	list<int>::iterator it_list;
+	vector<int>::iterator it_vect;
+	list<int>::iterator it2;
+	int cand_vert1, cand_vert2;
+
 	for (int i = 0; i < size; i++)
 		if (i != a)
 			out.push_back(i);
@@ -67,14 +73,15 @@ void hamilton_cycle::dirac_search(int ** matr, int size, list<int>& path)
 
 	while (true)
 	{
+		hasNext = false;
 		curr_vert = path.front();
-		bool hasNext = false;
-		for (vector<int>::iterator it_vect = out.begin(); it_vect != out.end(); ++it_vect)
+		for (it_vect = out.begin(); it_vect != out.end(); ++it_vect)
 		{
 			if (matr[curr_vert][*it_vect])
 			{
 				hasNext = true;
-				path.push_front(*it_vect);
+				if (*it_vect != a)
+					path.push_front(*it_vect);
 				out.erase(it_vect);
 				break;
 			}
@@ -82,20 +89,20 @@ void hamilton_cycle::dirac_search(int ** matr, int size, list<int>& path)
 		if (!hasNext)
 		{
 			int new_end_vert = curr_vert;
-			for (list<int>::iterator it_list = path.begin(); it_list != path.end(); ++it_list)
+			for (it_list = path.begin(); it_list != path.end(); ++it_list)
 			{
-				for (vector<int>::iterator it_vect = out.begin(); it_vect != out.end(); ++it_vect)
+				for (it_vect = out.begin(); it_vect != out.end(); ++it_vect)
 				{
 					if (matr[*it_list][*it_vect])
 					{
 						new_end_vert = *it_list;
-						for (list<int>::iterator it2 = it_list; it2 != path.end();)
+						for (it2 = it_list; it2 != path.end();)
 						{
-							int cand_vert1 = *it2;
-							int cand_vert2 = *(++it2);
-							if (matr[new_end_vert][cand_vert1] && matr[new_end_vert][cand_vert2])
+							cand_vert1 = *it2;
+							cand_vert2 = *(++it2);
+							if (matr[curr_vert][cand_vert1] && matr[curr_vert][cand_vert2])
 							{
-								path.insert(--it2, curr_vert);
+								path.insert(it2, curr_vert);
 								path.pop_front();
 								break;
 							}

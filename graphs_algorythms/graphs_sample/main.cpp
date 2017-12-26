@@ -539,6 +539,7 @@ void exper_dirac(int num, int size, int perc)
 				os << *it << " ";
 			}
 			os << endl;
+			path.clear();
 		}
 		else if(hamilton_cycle::search(matr, size, st))
 		{
