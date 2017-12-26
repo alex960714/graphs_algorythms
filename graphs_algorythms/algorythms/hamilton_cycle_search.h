@@ -2,6 +2,8 @@
 #define _HAM_CYC_SEARCH_H_
 
 #include <stack>
+#include <list>
+#include <vector>
 using namespace std;
 
 class hamilton_cycle
@@ -12,6 +14,7 @@ private:
 
 public:
 	static bool search(int **matr, int size, stack<int> &path);
+	static void dirac_search(int **matr, int size, list<int> &path);
 };
 
 

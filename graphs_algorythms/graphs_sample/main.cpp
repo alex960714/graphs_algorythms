@@ -7,6 +7,7 @@
 #include <time.h>
 #include <iostream>
 #include <vector>
+#include <list>
 #include <queue>
 #include <string>
 using namespace std;
@@ -21,9 +22,12 @@ void exper_split(int num, int size, int perc);
 int bron_kerbosch(int size, vector<int> *compsub, vector<int> cand, vector<int> not);
 bool search_neighboors(int size, vector<int> cand, vector<int> not);
 int BFS(int size);
+void exper_dirac(int num, int size, int perc);
+bool dirac_check(int size);
 
 int **matr;
 stack<int> st;
+list<int> path;
 My_graph *graph;
 
 int main(int argc, char** argv)
@@ -39,10 +43,10 @@ int main(int argc, char** argv)
 	do
 	{
 		cout << "Введите номер действия:" << endl << "1. Чтение из файла" << endl << "Заполнение случайными числами:"<<endl<<"2.Обыкновенный граф:" << endl;
-		cout << "3.Двудольный граф" << endl << "4.Расщепляемый граф" << endl;
+		cout << "3.Двудольный граф" << endl << "4.Расщепляемый граф" << endl << "5. Граф Дирака" << endl;
 		cin >> op;
 
-		if (op >= 2 && op <= 4)
+		if (op >= 2 && op <= 5)
 		{
 			cout << "Введите число вершин:" << endl;
 			cin >> size;
@@ -77,9 +81,13 @@ int main(int argc, char** argv)
 			break;
 		case 4:
 			exper_split(graph_num, size, perc);
+			break;
+		case 5:
+			exper_dirac(graph_num, size, perc);
+			break;
 		}
 		
-	} while (op < 1 && op > 4);
+	} while (op < 1 && op > 5);
 	//exper(graph_num, size, perc, op - 1);
 	
 
@@ -275,12 +283,7 @@ void exper(int num, int size, int perc, int type)
 void exper_bigraph(int num, int size, int perc)
 {
 	int cyc_num = 0;
-	double st_time, en_time, avg_time = 0; 
-	vector<int> clique, candidates, not;
-	for (int i = 0; i < size; i++)
-	{
-		candidates.push_back(i);
-	}
+	double st_time, en_time, avg_time = 0;
 	ofstream os;
 	os.open("results.txt");
 	for (int i = 0; i < num; i++)
@@ -498,5 +501,95 @@ int BFS(int size)
 		}
 	}
 	return part;
+}
+
+//--------------------------------------------------//
+
+void exper_dirac(int num, int size, int perc)
+{
+	int cyc_num = 0, dirac_num=0;
+	double st_time, en_time, avg_time = 0;
+	ofstream os;
+	list<int>::iterator it;
+	os.open("results.txt");
+	for (int i = 0; i < num; i++)
+	{
+		init_rand(size, perc);
+		if (size < 100)
+		{
+			for (int i = 0; i < size; i++)
+			{
+				for (int j = 0; j < size; j++)
+				{
+					os << matr[i][j] << " ";
+				}
+				os << endl;
+			}
+		}
+		st_time = GetTickCount() / 1000.0;
+		if (dirac_check(size))
+		{
+			dirac_num++;
+			hamilton_cycle::dirac_search(matr, size, path);
+			cyc_num++;
+			en_time = GetTickCount() / 1000.0;
+			os << "Hamilton cycle:" << endl;
+			for(it = path.begin(); it != path.end(); ++it)
+			{
+				os << *it << " ";
+			}
+			os << endl;
+		}
+		else if(hamilton_cycle::search(matr, size, st))
+		{
+			cyc_num++;
+			en_time = GetTickCount() / 1000.0;
+			os << "Not a Dirac graph" << endl;
+			os << "Hamilton cycle:" << endl;
+			while (!st.empty())
+			{
+				os << st.top() << " ";
+				st.pop();
+			}
+			os << endl;
+		}
+		else
+		{
+			en_time = GetTickCount() / 1000.0;
+			os << "Not a Dirac graph" << endl;
+			os << "No hamilton cycle" << endl;
+		}
+
+		os << "Time: " << (en_time - st_time) << endl;
+		avg_time = (avg_time*i + (en_time - st_time)) / (i + 1);
+
+		os << "---------------------------" << endl;
+	}
+
+	cout << endl << "Число графов Дирака: " << dirac_num << endl;
+	cout << endl << "Число графов с гамильтоновым циклом: " << cyc_num << endl;
+	cout << "Среднее время вычислений: " << avg_time << endl;
+
+	os << endl << "Число графов Дирака: " << dirac_num << endl;
+	os << endl << "Число графов с гамильтоновым циклом: " << cyc_num << endl;
+	os << "Среднее время вычислений: " << avg_time << endl;
+	os.close();
+}
+
+//-------------------------------------------------//
+
+bool dirac_check(int size)
+{
+	for (int i = 0; i < size; i++)
+	{
+		int power = 0;
+		for (int j = 0; j < size; j++)
+			if (matr[i][j])
+				power++;
+
+		if (power < size / 2)
+			return false;
+	}
+	return true;
 }
 
