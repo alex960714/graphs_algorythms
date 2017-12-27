@@ -22,13 +22,13 @@
     <ProjectGuid>{4C9C0744-2A15-4A34-8DA8-9EAA6B420D6C}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>graphs_sample</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -89,12 +89,12 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>C:\Users\User\Documents\GitHub\graphs_algorythms\graphs_algorythms\graph;C:\Users\Александр\Documents\GitHub\graphs_algorythms\graphs_algorythms\algorythms;C:\Users\Александр\Documents\GitHub\graphs_algorythms\graphs_algorythms\graph;C:\Users\User\Documents\GitHub\graphs_algorythms\graphs_algorythms\algorythms;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\User\Documents\GitHub\graphs_algorythms\graphs_algorythms\graph;C:\GitHub\graphs_algorythms\graphs_algorythms\algorythms;C:\GitHub\graphs_algorythms\graphs_algorythms\graph;C:\Users\User\Documents\GitHub\graphs_algorythms\graphs_algorythms\algorythms;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Users\Александр\Documents\GitHub\graphs_algorythms\graphs_algorythms\Debug;C:\Users\User\Documents\GitHub\graphs_algorythms\graphs_algorythms\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\GitHub\graphs_algorythms\graphs_algorythms\Debug;C:\Users\User\Documents\GitHub\graphs_algorythms\graphs_algorythms\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>algorythms.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>

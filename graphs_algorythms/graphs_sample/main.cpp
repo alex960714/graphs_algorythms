@@ -508,7 +508,7 @@ int BFS(int size)
 void exper_dirac(int num, int size, int perc)
 {
 	int cyc_num = 0, dirac_num=0;
-	double st_time, en_time, avg_time = 0;
+	double st_time, en_time, avg_time = 0, dirac_time = 0;
 	ofstream os;
 	list<int>::iterator it;
 	os.open("results.txt");
@@ -533,6 +533,7 @@ void exper_dirac(int num, int size, int perc)
 			hamilton_cycle::dirac_search(matr, size, path);
 			cyc_num++;
 			en_time = GetTickCount() / 1000.0;
+			dirac_time = (dirac_time*(dirac_num - 1) + (en_time - st_time)) / dirac_num;
 			os << "Hamilton cycle:" << endl;
 			for(it = path.begin(); it != path.end(); ++it)
 			{
@@ -541,7 +542,7 @@ void exper_dirac(int num, int size, int perc)
 			os << endl;
 			path.clear();
 		}
-		else if(hamilton_cycle::search(matr, size, st))
+		/*else if(hamilton_cycle::search(matr, size, st))
 		{
 			cyc_num++;
 			en_time = GetTickCount() / 1000.0;
@@ -553,12 +554,12 @@ void exper_dirac(int num, int size, int perc)
 				st.pop();
 			}
 			os << endl;
-		}
+		}*/
 		else
 		{
 			en_time = GetTickCount() / 1000.0;
 			os << "Not a Dirac graph" << endl;
-			os << "No hamilton cycle" << endl;
+			//os << "No hamilton cycle" << endl;
 		}
 
 		os << "Time: " << (en_time - st_time) << endl;
@@ -570,10 +571,12 @@ void exper_dirac(int num, int size, int perc)
 	cout << endl << "Число графов Дирака: " << dirac_num << endl;
 	cout << endl << "Число графов с гамильтоновым циклом: " << cyc_num << endl;
 	cout << "Среднее время вычислений: " << avg_time << endl;
+	cout << "Время для графов Дирака: " << dirac_time << endl;
 
 	os << endl << "Число графов Дирака: " << dirac_num << endl;
 	os << endl << "Число графов с гамильтоновым циклом: " << cyc_num << endl;
 	os << "Среднее время вычислений: " << avg_time << endl;
+	os << "Время для графов Дирака: " << dirac_time << endl;
 	os.close();
 }
 
