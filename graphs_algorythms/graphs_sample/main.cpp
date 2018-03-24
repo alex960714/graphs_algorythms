@@ -24,6 +24,8 @@ bool search_neighboors(int size, vector<int> cand, vector<int> not);
 int BFS(int size);
 void exper_dirac(int num, int size, int perc);
 bool dirac_check(int size);
+void exper_ore(int num, int size, int perc);
+bool ore_check(int size);
 
 int **matr;
 stack<int> st;
@@ -44,9 +46,10 @@ int main(int argc, char** argv)
 	{
 		cout << "Введите номер действия:" << endl << "1. Чтение из файла" << endl << "Заполнение случайными числами:"<<endl<<"2.Обыкновенный граф:" << endl;
 		cout << "3.Двудольный граф" << endl << "4.Расщепляемый граф" << endl << "5. Граф Дирака" << endl;
+		cout << "6. Граф Оре" << endl;
 		cin >> op;
 
-		if (op >= 2 && op <= 5)
+		if (op >= 2 && op <= 6)
 		{
 			cout << "Введите число вершин:" << endl;
 			cin >> size;
@@ -85,9 +88,12 @@ int main(int argc, char** argv)
 		case 5:
 			exper_dirac(graph_num, size, perc);
 			break;
+		case 6:
+			exper_ore(graph_num, size, perc);
+			break;
 		}
 		
-	} while (op < 1 && op > 5);
+	} while (op < 1 && op > 6);
 	//exper(graph_num, size, perc, op - 1);
 	
 
@@ -594,6 +600,89 @@ bool dirac_check(int size)
 		if (power < size / 2)
 			return false;
 	}
+	return true;
+}
+
+//--------------------------------------------------//
+
+void exper_ore(int num, int size, int perc)
+{
+	int cyc_num = 0, ore_num = 0;
+	double st_time, en_time, avg_time = 0, ore_time = 0;
+	ofstream os;
+	list<int>::iterator it;
+	os.open("results.txt");
+	for (int i = 0; i < num; i++)
+	{
+		init_rand(size, perc);
+		if (size < 100)
+		{
+			for (int i = 0; i < size; i++)
+			{
+				for (int j = 0; j < size; j++)
+				{
+					os << matr[i][j] << " ";
+				}
+				os << endl;
+			}
+		}
+		st_time = GetTickCount() / 1000.0;
+		if (ore_check(size))
+		{
+			ore_num++;
+			hamilton_cycle::dirac_search(matr, size, path);
+			cyc_num++;
+			en_time = GetTickCount() / 1000.0;
+			ore_time = (ore_time*(ore_num - 1) + (en_time - st_time)) / ore_num;
+			os << "Hamilton cycle:" << endl;
+			for (it = path.begin(); it != path.end(); ++it)
+			{
+				os << *it << " ";
+			}
+			os << endl;
+			path.clear();
+		}
+		else
+		{
+			en_time = GetTickCount() / 1000.0;
+			os << "Not an Ore graph" << endl;
+		}
+
+		os << "Time: " << (en_time - st_time) << endl;
+		avg_time = (avg_time*i + (en_time - st_time)) / (i + 1);
+
+		os << "---------------------------" << endl;
+	}
+
+	cout << endl << "Число графов Оре: " << ore_num << endl;
+	cout << endl << "Число графов с гамильтоновым циклом: " << cyc_num << endl;
+	cout << "Среднее время вычислений: " << avg_time << endl;
+	cout << "Время для графов Оре: " << ore_time << endl;
+
+	os << endl << "Число графов Оре: " << ore_num << endl;
+	os << endl << "Число графов с гамильтоновым циклом: " << cyc_num << endl;
+	os << "Среднее время вычислений: " << avg_time << endl;
+	os << "Время для графов Оре: " << ore_time << endl;
+	os.close();
+}
+
+//-------------------------------------------------//
+
+bool ore_check(int size)
+{
+	int* power = new int[size];
+	for (int i = 0; i < size; i++)
+		power[i] = 0;
+
+	for (int i = 0; i < size; i++)
+		for (int j = 0; j < size; j++)
+			power[i] += matr[i][j];
+
+	for (int i = 0; i < size; i++)
+		for (int j = 0; j < size; j++)
+			if (i != j && !matr[i][j] && power[i] + power[j] < size)
+				return false;
+
 	return true;
 }
 
