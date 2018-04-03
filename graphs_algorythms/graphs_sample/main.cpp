@@ -26,6 +26,7 @@ void exper_dirac(int num, int size, int perc);
 bool dirac_check(int size);
 void exper_ore(int num, int size, int perc);
 bool ore_check(int size);
+bool hamilton_check(list<int> path, int size);
 
 int **matr;
 stack<int> st;
@@ -513,7 +514,7 @@ int BFS(int size)
 
 void exper_dirac(int num, int size, int perc)
 {
-	int cyc_num = 0, dirac_num=0;
+	int cyc_num = 0, dirac_num = 0, fails_num = 0;
 	double st_time, en_time, avg_time = 0, dirac_time = 0;
 	ofstream os;
 	list<int>::iterator it;
@@ -537,15 +538,24 @@ void exper_dirac(int num, int size, int perc)
 		{
 			dirac_num++;
 			hamilton_cycle::dirac_search(matr, size, path);
-			cyc_num++;
 			en_time = GetTickCount() / 1000.0;
 			dirac_time = (dirac_time*(dirac_num - 1) + (en_time - st_time)) / dirac_num;
-			os << "Hamilton cycle:" << endl;
+			os << "Result:" << endl;
 			for(it = path.begin(); it != path.end(); ++it)
 			{
 				os << *it << " ";
 			}
 			os << endl;
+			if (hamilton_check(path, size))
+			{
+				os << "PASSED: hamilton cycle" << endl;
+				cyc_num++;
+			}
+			else
+			{
+				os << "FAILED: NOT a namilton cycle!!!" << endl;
+				fails_num++;
+			}
 			path.clear();
 		}
 		/*else if(hamilton_cycle::search(matr, size, st))
@@ -576,13 +586,19 @@ void exper_dirac(int num, int size, int perc)
 
 	cout << endl << "Число графов Дирака: " << dirac_num << endl;
 	cout << endl << "Число графов с гамильтоновым циклом: " << cyc_num << endl;
+	cout << endl << "Число ошибок: " << fails_num << endl;
 	cout << "Среднее время вычислений: " << avg_time << endl;
 	cout << "Время для графов Дирака: " << dirac_time << endl;
+	if (fails_num)
+		cout << endl << "ОШИБКА: есть графы с ошибками" << endl;
 
 	os << endl << "Число графов Дирака: " << dirac_num << endl;
 	os << endl << "Число графов с гамильтоновым циклом: " << cyc_num << endl;
+	os << endl << "Число ошибок: " << fails_num << endl;
 	os << "Среднее время вычислений: " << avg_time << endl;
 	os << "Время для графов Дирака: " << dirac_time << endl;
+	if (fails_num)
+		os << endl << "ОШИБКА: есть графы с ошибками" << endl;
 	os.close();
 }
 
@@ -607,7 +623,7 @@ bool dirac_check(int size)
 
 void exper_ore(int num, int size, int perc)
 {
-	int cyc_num = 0, ore_num = 0;
+	int cyc_num = 0, ore_num = 0, fails_num = 0;
 	double st_time, en_time, avg_time = 0, ore_time = 0;
 	ofstream os;
 	list<int>::iterator it;
@@ -631,15 +647,24 @@ void exper_ore(int num, int size, int perc)
 		{
 			ore_num++;
 			hamilton_cycle::dirac_search(matr, size, path);
-			cyc_num++;
 			en_time = GetTickCount() / 1000.0;
 			ore_time = (ore_time*(ore_num - 1) + (en_time - st_time)) / ore_num;
-			os << "Hamilton cycle:" << endl;
+			os << "Result:" << endl;
 			for (it = path.begin(); it != path.end(); ++it)
 			{
 				os << *it << " ";
 			}
 			os << endl;
+			if (hamilton_check(path, size))
+			{
+				os << "PASSED: hamilton cycle" << endl;
+				cyc_num++;
+			}
+			else
+			{
+				os << "FAILED: NOT a namilton cycle!!!" << endl;
+				fails_num++;
+			}
 			path.clear();
 		}
 		else
@@ -656,13 +681,19 @@ void exper_ore(int num, int size, int perc)
 
 	cout << endl << "Число графов Оре: " << ore_num << endl;
 	cout << endl << "Число графов с гамильтоновым циклом: " << cyc_num << endl;
+	cout << endl << "Число ошибок: " << fails_num << endl;
 	cout << "Среднее время вычислений: " << avg_time << endl;
 	cout << "Время для графов Оре: " << ore_time << endl;
+	if (fails_num)
+		cout << endl << "ОШИБКА: есть графы с ошибками" << endl;
 
 	os << endl << "Число графов Оре: " << ore_num << endl;
 	os << endl << "Число графов с гамильтоновым циклом: " << cyc_num << endl;
+	os << endl << "Число ошибок: " << fails_num << endl;
 	os << "Среднее время вычислений: " << avg_time << endl;
 	os << "Время для графов Оре: " << ore_time << endl;
+	if (fails_num)
+		os << endl << "ОШИБКА: есть графы с ошибками" << endl;
 	os.close();
 }
 
@@ -684,5 +715,33 @@ bool ore_check(int size)
 				return false;
 
 	return true;
+}
+
+//------------------------------------------------//
+
+bool hamilton_check(list<int> path, int size)
+{
+	int* checked = new int[size];
+	for (int i = 0; i < size; i++)
+		checked[i] = 0;
+	list<int>::iterator it = path.begin();
+	list<int>::iterator temp = path.begin();
+	++temp;
+	for (; temp != path.end(); ++it, ++temp)
+	{
+		if (!matr[*it][*(temp)] || checked[*it])
+		{
+			delete[] checked;
+			return false;
+		}
+		checked[*it]++;
+	}
+	if (matr[path.front()][path.back()] && !checked[path.back()])
+	{
+		delete[] checked;
+		return true;
+	}
+	delete[] checked;
+	return false;
 }
 
